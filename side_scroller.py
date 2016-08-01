@@ -1,9 +1,7 @@
 import pygame
 import random
-#import the Scroller to use as background
-#from building import * 
+from cityscroll import * 
 from block import *
-
 
 pygame.init()
 screen_width = 700
@@ -14,24 +12,26 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (255, 0, 0)
-
+BLUE = (0, 0, 255)
 
 clock = pygame.time.Clock()
 score = 0
 lives = 10
 
-## The scroller object is created here
-#any_scroller = Scroller(screen_width, 300, screen_height, (255, 100, 100), 2)
-
 ## Font to allow for 
-font = pygame.font.SysFont("Droid Sans", 40, True, False)
+font = pygame.font.SysFont("Droid Sans", 45, True, False)
 
-# Blocks for first run of game, stores them in all the lists
+# Blocks for first run of game, stores them in all the lists 
 make_blocks()
 
 #check that game is not done
 done = False
+
+x = 0;
+width = random.randint(50, 100)
+height = random.randint(10, 400)
+
+building_list = []
 
 #Start game loop
 while not done:
@@ -41,6 +41,18 @@ while not done:
                 
     # Clear the screen
     screen.fill(WHITE)
+    
+    if x % 20 == 0:
+       building = Building(700 + width, 500 - height, width, height, RED)
+       building_list.append(building)
+       
+    x += 1
+       
+    for building in building_list:
+        building.draw()
+        building.move(2)
+  
+    x += 1
 
     # Get the current mouse position. This returns the position
     # as a list of two numbers.
@@ -74,6 +86,18 @@ while not done:
     #keeps the text on the page at these coordinates
     screen.blit(score_text, [500, 50])
     screen.blit(lives_text, [50, 50])
+    
+    if score >= 25:
+        screen.fill(GREEN)
+        progress = False 
+        winner_text = font.render("You win!!!", True, WHITE)
+        screen.blit(winner_text, [150, 200])
+        
+    if lives <= 0:
+        screen.fill(RED)
+        progress = False
+        loser_text = font.render("You lose!!!", True, WHITE)
+        screen.blit(loser_text, [150, 200])
 
     
     # Draw the scrolling background
